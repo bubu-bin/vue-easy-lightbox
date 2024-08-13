@@ -28,7 +28,6 @@
 import { defineComponent, isReactive, ref } from 'vue'
 import { useEasyLightbox } from '../composables'
 import VueEasyLightbox from '../index'
-
 export default defineComponent({
   components: {
     VueEasyLightbox
@@ -56,13 +55,13 @@ export default defineComponent({
     }
 
     const showSingle = () => {
-      imgsRef.value = 'http://it-does-not-matter.png/'
+      imgsRef.value = 'http://via.placeholder.com/1000x500'
       show()
     }
     const showMultiple = () => {
       imgsRef.value = [
-        'http://via.placeholder.com/2000x2000',
-        'http://via.placeholder.com/350x150'
+        { src: 'src/assets/sample.pdf', type: 'pdf' },
+        { src: 'http://via.placeholder.com/1000x500', type: 'img' }
       ]
       changeIndex()
       show()

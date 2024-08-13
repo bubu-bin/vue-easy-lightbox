@@ -28,6 +28,7 @@ export interface Img {
   src?: string
   title?: string
   alt?: string
+  type?: 'img' | 'pdf'
 }
 
 export type PropsImgs = Img | string | (Img | string)[]

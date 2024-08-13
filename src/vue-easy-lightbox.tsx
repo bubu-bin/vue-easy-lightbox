@@ -35,7 +35,11 @@ import { useImage, useMouse, useTouch } from './utils/hooks'
 import { Img, IImgWrapperState, PropsImgs } from './types'
 
 function isImg(arg: Img): arg is Img {
-  return isObject(arg) && isString(arg.src)
+  return isObject(arg) && isString(arg.src) && arg.type === 'img'
+}
+
+function isPdf(arg: Img): arg is Img {
+  return isObject(arg) && isString(arg.src) && arg.type === 'pdf'
 }
 
 export default defineComponent({
@@ -162,7 +166,7 @@ export default defineComponent({
           .map((img) => {
             if (typeof img === 'string') {
               return { src: img }
-            } else if (isImg(img)) {
+            } else if (isImg(img) || isPdf(img)) {
               return img
             }
           })
@@ -522,6 +526,18 @@ export default defineComponent({
     }
 
     const renderImgWrapper = () => {
+      if (isPdf(currentImg.value)) {
+        return (
+          <embed
+            ref={imgRef}
+            src={currentImgSrc.value}
+            type="application/pdf"
+            height="100%"
+            width="100%"
+          />
+        )
+      }
+
       return (
         <div
           class={`${prefixCls}-img-wrapper`}
@@ -559,14 +575,30 @@ export default defineComponent({
       return renderImgWrapper()
     }
 
-    const renderTestImg = () => (
-      <img
-        style="display:none;"
-        src={currentImgSrc.value}
-        onError={onTestImgError}
-        onLoad={onTestImgLoad}
-      />
-    )
+    const renderTestImg = () => {
+      if (isPdf(currentImg.value)) {
+        onTestImgLoad()
+        return (
+          <embed
+            src={currentImgSrc.value}
+            type="application/pdf"
+            style="display:none;"
+            width="0"
+            height="0"
+            onError={onTestImgError}
+          />
+        )
+      }
+
+      return (
+        <img
+          style="display:none;"
+          src={currentImgSrc.value}
+          onError={onTestImgError}
+          onLoad={onTestImgLoad}
+        />
+      )
+    }
 
     const renderPrevBtn = () => {
       if (slots['prev-btn']) {
